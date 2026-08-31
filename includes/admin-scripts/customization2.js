@@ -5,7 +5,7 @@
 
 (function($) {
     'use strict';
-
+    
     const defaultIconUrl = (typeof talktopcWidgetSettings2 !== 'undefined' && talktopcWidgetSettings2.defaultIconUrl)
       ? talktopcWidgetSettings2.defaultIconUrl
       : '';
@@ -424,7 +424,7 @@
         const panel = $('#mockPanel');
         if (panelOpen) {
             panel.show();
-            renderPanelContent();
+          renderPanelContent();
         } else {
             panel.hide();
         }
@@ -579,19 +579,19 @@
                             <div style="position:relative;">
                                 <div data-element-type="heroAvatar" style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg, ${v.avatarGradient1 || '#6d56f5'}, ${v.avatarGradient2 || '#a78bfa'});display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;cursor:pointer;">${agentName.charAt(0).toUpperCase()}</div>
                                 <div style="position:absolute;bottom:0;right:0;width:10px;height:10px;border-radius:50%;background:${v.onlineDotColor || '#22c55e'};border:2px solid ${v.heroGradient1 || '#2a2550'};"></div>
-                            </div>
+        </div>
                             <div>
                                 <div data-element-type="heroAgentName" style="font-size:14px;font-weight:600;color:${v.agentNameColor || '#f0eff8'};cursor:pointer;">${agentName}</div>
                                 <div data-element-type="heroAgentRole" style="font-size:11px;color:${v.agentRoleColor || 'rgba(255,255,255,0.35)'};cursor:pointer;">${v.agentRole || 'AI Voice Assistant'}</div>
-                            </div>
-                        </div>
+              </div>
+            </div>
                         <button data-element-type="closeButton" style="background:none;border:none;cursor:pointer;color:${closeColor};padding:4px;display:flex;align-items:center;justify-content:center;">
                             <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2L2 10M2 2l8 8"/></svg>
                         </button>
-                    </div>
+                </div>
                     <div data-element-type="heroHeadline" style="font-size:22px;font-weight:700;color:${v.headlineColor || '#ffffff'};margin-bottom:6px;cursor:pointer;">${v.headline || 'Hi there 👋'}</div>
                     <div data-element-type="heroSubline" style="font-size:13px;color:${v.sublineColor || 'rgba(255,255,255,0.45)'};line-height:1.5;cursor:pointer;">${v.subline || 'Ask me anything — I respond instantly<br>in voice or text.'}</div>
-                </div>
+              </div>
                 <div style="padding:14px 20px 10px;background:${panelBg};">
                     <button data-element-type="heroPrimaryBtn" style="width:100%;padding:13px 18px;border-radius:12px;border:none;background:linear-gradient(135deg, ${v.primaryBtnGradient1 || '#6d56f5'}, ${v.primaryBtnGradient2 || '#9d8df8'});color:${v.startCallButtonTextColor || '#ffffff'};font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px;">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${v.startCallButtonTextColor || '#ffffff'}" stroke-width="2"><path d="M12 2a3 3 0 0 1 3 3v7a3 3 0 0 1-6 0V5a3 3 0 0 1 3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3M8 22h8"/></svg>
@@ -604,7 +604,7 @@
                 </div>
                 <div style="padding:6px 18px 10px;display:flex;justify-content:center;border-top:1px solid ${footerBorderColor};background:${panelBg};flex-shrink:0;">
                     <span style="font-size:10px;color:${footerTextColor};">Powered by <span style="color:${footerLinkColor};font-weight:700;">TalkToPC</span></span>
-                </div>
+              </div>
             </div>
         `);
         bindPanelClicks(panel);
@@ -627,20 +627,20 @@
                         <div data-element-type="modeCard" data-mode="voice" style="flex:1;aspect-ratio:1;background:${l.modeCardBackgroundColor || '#fff'};border:1px solid ${l.modeCardBorderColor || 'rgba(0,0,0,0.06)'};border-radius:12px;padding:14px;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
                             <div style="width:44px;height:44px;border-radius:10px;background:${iconBgColor};display:flex;align-items:center;justify-content:center;margin-bottom:8px;color:#fff;">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-                            </div>
+        </div>
                             <div style="font-size:13px;color:${l.modeCardTitleColor || '#1e1b4b'};">${l.voiceCardTitle || 'Voice Call'}</div>
-                        </div>
+            </div>
                         <div data-element-type="modeCard" data-mode="text" style="flex:1;aspect-ratio:1;background:${l.modeCardBackgroundColor || '#fff'};border:1px solid ${l.modeCardBorderColor || 'rgba(0,0,0,0.06)'};border-radius:12px;padding:14px;cursor:pointer;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
                             <div style="width:44px;height:44px;border-radius:10px;background:${iconBgColor};display:flex;align-items:center;justify-content:center;margin-bottom:8px;color:#fff;">
                                 <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.54.36 2.98.97 4.29L1 23l6.71-1.97C9.02 21.64 10.46 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2z"/></svg>
-                            </div>
+            </div>
                             <div style="font-size:13px;color:${l.modeCardTitleColor || '#1e1b4b'};">${l.textCardTitle || 'Text Chat'}</div>
-                        </div>
-                    </div>
-                </div>
+            </div>
+          </div>
+          </div>
                 <div style="padding:6px 18px 10px;display:flex;justify-content:center;border-top:1px solid rgba(0,0,0,0.08);background:transparent;flex-shrink:0;">
                     <span style="font-size:10px;color:rgba(0,0,0,0.4);">Powered by <span style="color:${iconBgColor};font-weight:700;">TalkToPC</span></span>
-                </div>
+        </div>
             </div>
         `);
         bindPanelClicks(panel);
@@ -664,18 +664,18 @@
                 <div style="flex:1;padding:16px;overflow-y:auto;">
                     <div data-element-type="userMessage" style="max-width:75%;padding:10px 14px;border-radius:${m.borderRadius || 16}px;background:${m.userBackgroundColor || '#E5E7EB'};color:${m.textColor || '#1F2937'};font-size:${m.fontSize || '14px'};margin-bottom:10px;margin-left:auto;cursor:pointer;">Hello!</div>
                     <div data-element-type="agentMessage" style="max-width:75%;padding:10px 14px;border-radius:${m.borderRadius || 16}px;background:${m.agentBackgroundColor || (light ? '#f3f4f6' : 'rgba(255,255,255,0.08)')};color:${m.textColor || (light ? '#1F2937' : 'rgba(255,255,255,0.85)')};font-size:${m.fontSize || '14px'};margin-bottom:10px;cursor:pointer;">Hi! How can I help?</div>
-                </div>
+            </div>
                 <div style="padding:8px 12px;border-top:1px solid ${light ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)'};">
                     <div style="display:flex;gap:8px;">
                         <input data-element-type="input" type="text" readonly placeholder="${t.inputPlaceholder || 'Type your message...'}" style="flex:1;padding:10px 14px;border-radius:20px;background:${inputBg};border:1px solid ${inputBorder};color:${inputColor};font-size:13px;outline:none;cursor:pointer;">
                         <button data-element-type="sendButton" style="width:36px;height:36px;border-radius:50%;border:none;background:${t.sendButtonColor || '#7C3AED'};color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
                         </button>
-                    </div>
-                </div>
+          </div>
+          </div>
                 <div style="padding:6px 18px 10px;display:flex;justify-content:center;border-top:1px solid ${footerBorderColor};background:${panelBg};flex-shrink:0;">
                     <span style="font-size:10px;color:${footerTextColor};">Powered by <span style="color:${footerLinkColor};font-weight:700;">TalkToPC</span></span>
-                </div>
+        </div>
             </div>
         `);
         bindPanelClicks(panel);
@@ -712,46 +712,46 @@
                 <div style="padding:16px 20px;border-bottom:1px solid ${sectionBorder};text-align:center;">
                     <div data-element-type="timer" style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,0.06);font-size:12px;font-family:'JetBrains Mono',monospace;cursor:pointer;margin-bottom:12px;">
                         <div style="width:6px;height:6px;border-radius:50%;background:#ef4444;"></div><span>00:11</span>
-                    </div>
+              </div>
                     <div data-element-type="waveform" style="display:flex;align-items:center;justify-content:center;gap:2px;height:48px;margin-bottom:10px;cursor:pointer;">${bars}</div>
                     <div style="display:flex;align-items:center;justify-content:center;gap:6px;font-size:12px;color:#10b981;font-weight:500;margin-bottom:12px;">
                         <div style="width:6px;height:6px;border-radius:50%;background:#10b981;"></div>Listening...
-                    </div>
+              </div>
                     <div style="display:flex;justify-content:center;gap:10px;">
                         <button data-element-type="micButton" style="width:44px;height:44px;border-radius:50%;background:${v.micButtonColor || '#7C3AED'};border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-                        </button>
+                </button>
                         <button data-element-type="endCallButton" style="width:48px;height:48px;border-radius:50%;background:${v.endCallButtonColor || '#ef4444'};border:none;cursor:pointer;color:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(239,68,68,0.4);">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z" transform="rotate(135 12 12)"/></svg>
-                        </button>
+                </button>
                         <button data-element-type="speakerButton" style="width:44px;height:44px;border-radius:50%;background:${v.speakerButtonColor || '#FFFFFF'};border:none;cursor:pointer;color:#333;display:flex;align-items:center;justify-content:center;">
                             <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 010 14.14M15.54 8.46a5 5 0 010 7.07"/></svg>
-                        </button>
-                    </div>
-                </div>
+                </button>
+              </div>
+            </div>
                 <div style="flex:1;display:flex;flex-direction:column;background:${panelBg};min-height:0;">
                     <div style="padding:10px 16px 6px;display:flex;justify-content:space-between;align-items:center;">
                         <span style="font-size:10px;font-weight:600;color:${convHeaderColor};letter-spacing:0.5px;">CONVERSATION</span>
-                    </div>
+          </div>
                     <div data-element-type="liveTranscript" style="padding:0 16px 10px;cursor:pointer;flex:1;">
                         <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
                             <div style="width:6px;height:6px;border-radius:50%;background:${liveDotColor};"></div>
                             <span style="font-size:10px;font-weight:700;color:${liveColor};">LIVE</span>
-                        </div>
+              </div>
                         <div style="font-size:${v.liveTranscriptFontSize || '14px'};color:${transcriptColor};line-height:1.6;">Hello, I'm ${agentName}, How can I help you today?</div>
-                    </div>
+            </div>
                     <div style="padding:8px 12px;border-top:1px solid ${sectionBorder};background:${panelBg};">
                         <div style="display:flex;gap:8px;">
                             <input type="text" readonly placeholder="Type your message..." style="flex:1;padding:8px 12px;border-radius:20px;background:${inputBg};border:1px solid ${inputBorder};color:${inputColor};font-size:13px;outline:none;">
                             <button style="width:32px;height:32px;border-radius:50%;border:none;background:${waveColor};color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-                            </button>
-                        </div>
-                    </div>
+              </button>
+            </div>
+          </div>
                     <div style="padding:6px 18px 10px;display:flex;justify-content:center;border-top:1px solid ${footerBorderColor};background:${panelBg};flex-shrink:0;">
                         <span style="font-size:10px;color:${footerTextColor};">Powered by <span style="color:${footerLinkColor};font-weight:700;">TalkToPC</span></span>
-                    </div>
-                </div>
+          </div>
+        </div>
             </div>
         `);
         bindPanelClicks(panel);
