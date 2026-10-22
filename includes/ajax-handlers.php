@@ -727,16 +727,33 @@ add_action('wp_ajax_talktopc_auto_setup_agent', 'talktopc_ajax_auto_setup_agent'
 // =============================================================================
 // TEST ENDPOINT - Verify file is deployed (Docker-friendly)
 // =============================================================================
+// Administrators only. This answers "is the deployed file current?", and the
+// honest answer names the server's PHP and WordPress versions -- which is
+// reconnaissance in the hands of anyone else. wp_ajax_ alone only requires a
+// logged-in user, so on a WooCommerce or membership site every customer could
+// read it.
+//
+// There is deliberately no nonce here, unlike the other handlers in this file.
+// This endpoint has no side effect and exists to be called with curl during a
+// deploy; a nonce would break that workflow to defend against an admin's own
+// browser being made to fetch a version number it can already see in wp-admin.
+// The capability check is the control that matters. Any handler added here that
+// *writes* anything needs the nonce as well.
 add_action('wp_ajax_talktopc_test_handler', function() {
-    $file_mtime = file_exists(__FILE__) ? filemtime(__FILE__) : 0;
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error(['message' => 'Unauthorized'], 403);
+    }
+
+    // The absolute path is not reported. It identifies the hosting account and
+    // directory layout, and says nothing about whether the file is current --
+    // the modification time already answers that.
+    $file_mtime = filemtime(__FILE__);
     wp_send_json_success([
         'message' => 'Handler file is deployed correctly!',
-        'version' => '1.9.96-fixed-docker-v2',
+        'version' => TALKTOPC_VERSION,
         'timestamp' => time(),
-        'file' => __FILE__,
-        'file_exists' => file_exists(__FILE__),
-        'file_mtime' => $file_mtime,
-        'file_mtime_formatted' => $file_mtime > 0 ? gmdate('Y-m-d H:i:s', $file_mtime) : 'Unknown',
+        'file_mtime' => $file_mtime ? $file_mtime : 0,
+        'file_mtime_formatted' => $file_mtime ? gmdate('Y-m-d H:i:s', $file_mtime) : 'Unknown',
         'php_version' => PHP_VERSION,
         'wordpress_version' => get_bloginfo('version')
     ]);

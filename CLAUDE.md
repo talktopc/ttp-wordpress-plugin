@@ -50,6 +50,16 @@ AI-powered voice assistant plugin for WordPress. Visitors have natural voice con
 
 `talktopc_fetch_agents`, `talktopc_fetch_voices`, `talktopc_fetch_credits`, `talktopc_create_agent`, `talktopc_update_agent`, `talktopc_generate_prompt`, `talktopc_save_page_rules`, `talktopc_save_widget_customization2`, `talktopc_get_signed_url` (public/nopriv), and more.
 
+**Every handler needs a nonce and a capability check.** `wp_ajax_` alone only means
+"logged in", which on a WooCommerce or membership site is every customer — it is not an
+admin gate. The two deliberate exceptions, both load-bearing: `talktopc_get_signed_url` is
+registered `_nopriv` because site visitors are not logged in, and its `talktopc_widget_nonce`
+is a same-origin speed bump rather than an authentication control (any visitor can read it
+out of the page); and `talktopc_test_handler` is a read-only deploy check meant to be called
+with curl, so it carries the capability check without a nonce and deliberately does not
+report `__FILE__` — an absolute path identifies the hosting account and says nothing about
+whether the file is current.
+
 ## OAuth Flow (`oauth.php`)
 
 1. User clicks "Connect" → Verify nonce, generate one-time secret, store in 5-min transient
