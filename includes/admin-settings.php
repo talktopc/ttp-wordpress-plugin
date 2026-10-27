@@ -42,6 +42,12 @@ add_action('admin_init', function() {
     register_setting('talktopc_connection', 'talktopc_api_key', ['sanitize_callback' => 'sanitize_text_field']);
     register_setting('talktopc_connection', 'talktopc_app_id', ['sanitize_callback' => 'sanitize_text_field']);
     register_setting('talktopc_connection', 'talktopc_user_email', ['sanitize_callback' => 'sanitize_email']);
+
+    // Partner embed. Own settings group so saving it cannot wipe other options.
+    register_setting('talktopc_embed', 'talktopc_embed_slug', [
+        'sanitize_callback' => 'talktopc_sanitize_embed_slug',
+        'default' => ''
+    ]);
     
     // =========================================================================
     // AGENT SELECTION
@@ -340,8 +346,49 @@ function talktopc_sanitize_page_rules($input) {
 }
 
 /**
+ * One word used as https://cdn.talktopc.com/<word>.js
+ * Empty clears the embed. Anything else is rejected.
+ *
+ * @param mixed $value
+ * @return string Sanitized slug, or '' when empty or invalid
+ */
+function talktopc_sanitize_embed_slug($value) {
+    $slug = talktopc_normalize_embed_slug($value);
+    return $slug === false ? '' : $slug;
+}
+
+/**
+ * @param mixed $value
+ * @return string|false Slug, '' when empty, false when the input is not one safe word
+ */
+function talktopc_normalize_embed_slug($value) {
+    $value = trim((string) $value);
+    if ($value === '') {
+        return '';
+    }
+    if (preg_match('/\.js$/i', $value)) {
+        $value = substr($value, 0, -3);
+        $value = trim($value);
+    }
+    if ($value === '') {
+        return '';
+    }
+    if (!preg_match('/^[A-Za-z]+(?:-[A-Za-z]+){0,8}$/', $value) || strlen($value) > 64) {
+        return false;
+    }
+    return $value;
+}
+
+function talktopc_embed_script_url($slug) {
+    if (!is_string($slug) || !preg_match('/^[A-Za-z]+(?:-[A-Za-z]+){0,8}$/', $slug) || strlen($slug) > 64) {
+        return '';
+    }
+    return 'https://cdn.talktopc.com/' . $slug . '.js';
+}
+
+/**
  * Sanitize checkbox value
- * 
+ *
  * WordPress Plugin Review: Converts checkbox values to '1' or '0'
  */
 function talktopc_sanitize_checkbox($value) {

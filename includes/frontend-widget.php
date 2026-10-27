@@ -12,6 +12,31 @@
 
 if (!defined('ABSPATH')) exit;
 
+/**
+ * Partner embed. Prints even when no TalkToPC API key is connected.
+ * Empty slug prints nothing. The URL is always https://cdn.talktopc.com/<slug>.js.
+ */
+add_action('wp_head', 'talktopc_print_partner_embed', 1);
+
+function talktopc_print_partner_embed() {
+    if (is_admin()) {
+        return;
+    }
+    $src = talktopc_embed_script_url((string) get_option('talktopc_embed_slug', ''));
+    if ($src === '') {
+        return;
+    }
+    echo "<script>\n";
+    echo "(function () {\n";
+    echo "  if (window.top !== window.self) return;\n";
+    echo "  var s = document.createElement('script');\n";
+    echo "  s.src = " . wp_json_encode($src, JSON_UNESCAPED_SLASHES) . ";\n";
+    echo "  s.async = true;\n";
+    echo "  document.head.appendChild(s);\n";
+    echo "})();\n";
+    echo "</script>\n";
+}
+
 add_action('wp_enqueue_scripts', function() {
     $api_key = get_option('talktopc_api_key');
     $default_agent_id = get_option('talktopc_agent_id');

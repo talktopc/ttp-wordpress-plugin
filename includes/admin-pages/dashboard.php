@@ -9,6 +9,157 @@
 
 if (!defined('ABSPATH')) exit;
 
+function talktopc_render_embed_card() {
+    $slug = (string) get_option('talktopc_embed_slug', '');
+    $src = talktopc_embed_script_url($slug);
+    ?>
+    <div class="card">
+        <h2><span class="icon">📄</span> Partner script</h2>
+        <p style="color: #646970; margin-bottom: 15px; font-size: 13px;">For registered partners only. Use an existing specific script.</p>
+        <table class="form-table" style="margin-top: 0;">
+            <tr>
+                <th scope="row"><label for="talktopc_embed_slug">Script name</label></th>
+                <td>
+                    <input type="text" id="talktopc_embed_slug" class="regular-text" value="<?php echo esc_attr($slug); ?>" autocomplete="off" spellcheck="false" <?php disabled($src !== ''); ?>>
+                    <p class="description" id="talktopc_embed_preview"><?php echo $src !== '' ? esc_html($src) : 'Nothing is added until you save a name.'; ?></p>
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top: 10px;">
+            <button type="button" class="button button-primary" id="talktopc_save_embed" <?php echo $src !== '' ? 'style="display:none;"' : ''; ?>>Save script name</button>
+            <button type="button" class="button" id="talktopc_edit_embed" <?php echo $src === '' ? 'style="display:none;"' : ''; ?>>Edit</button>
+            <button type="button" class="button" id="talktopc_cancel_embed" style="display:none;">Cancel</button>
+            <button type="button" class="button button-link-delete" id="talktopc_remove_embed" <?php echo $src === '' ? 'style="display:none;"' : ''; ?>>Remove script</button>
+            <span id="talktopc_embed_save_status" style="margin-left: 10px;"></span>
+        </div>
+    </div>
+    <script>
+    (function() {
+        var input = document.getElementById('talktopc_embed_slug');
+        var preview = document.getElementById('talktopc_embed_preview');
+        var saveBtn = document.getElementById('talktopc_save_embed');
+        var editBtn = document.getElementById('talktopc_edit_embed');
+        var cancelBtn = document.getElementById('talktopc_cancel_embed');
+        var removeBtn = document.getElementById('talktopc_remove_embed');
+        var status = document.getElementById('talktopc_embed_save_status');
+        if (!input || !preview || !saveBtn || !editBtn || !cancelBtn || !removeBtn) return;
+
+        var saved = input.value;
+
+        function wordFrom(value) {
+            value = value.trim();
+            if (/\.js$/i.test(value)) value = value.slice(0, -3);
+            return value;
+        }
+
+        function refreshPreview() {
+            var word = wordFrom(input.value);
+            if (word === '') {
+                preview.textContent = 'Nothing is added until you save a name.';
+                return;
+            }
+            if (!/^[A-Za-z]+(?:-[A-Za-z]+){0,8}$/.test(word) || word.length > 64) {
+                preview.textContent = 'English letters and dashes only.';
+                return;
+            }
+            preview.textContent = 'https://cdn.talktopc.com/' + word + '.js';
+        }
+
+        function showStatus(text, ok) {
+            status.textContent = text;
+            status.style.color = ok ? '#00a32a' : '#d63638';
+            setTimeout(function() { status.textContent = ''; }, 4000);
+        }
+
+        function showLocked() {
+            input.value = saved;
+            input.disabled = saved !== '';
+            saveBtn.style.display = 'none';
+            cancelBtn.style.display = 'none';
+            editBtn.style.display = '';
+            removeBtn.style.display = '';
+            refreshPreview();
+        }
+
+        function showEmpty() {
+            saved = '';
+            input.value = '';
+            input.disabled = false;
+            saveBtn.style.display = '';
+            cancelBtn.style.display = 'none';
+            editBtn.style.display = 'none';
+            removeBtn.style.display = 'none';
+            refreshPreview();
+        }
+
+        function showEditing() {
+            input.disabled = false;
+            input.focus();
+            saveBtn.style.display = '';
+            cancelBtn.style.display = '';
+            editBtn.style.display = 'none';
+            removeBtn.style.display = '';
+        }
+
+        function postSlug(value) {
+            status.textContent = 'Saving...';
+            status.style.color = '#646970';
+            var formData = new FormData();
+            formData.append('action', 'talktopc_save_embed_slug');
+            formData.append('embed_slug', value);
+            formData.append('_wpnonce', '<?php echo esc_js(wp_create_nonce('talktopc_save_embed_slug')); ?>');
+            return fetch(ajaxurl, { method: 'POST', body: formData }).then(function(r) { return r.json(); });
+        }
+
+        input.addEventListener('input', refreshPreview);
+
+        editBtn.addEventListener('click', showEditing);
+
+        cancelBtn.addEventListener('click', function() {
+            showLocked();
+        });
+
+        saveBtn.addEventListener('click', function() {
+            var word = wordFrom(input.value);
+            if (word !== '' && (!/^[A-Za-z]+(?:-[A-Za-z]+){0,8}$/.test(word) || word.length > 64)) {
+                showStatus('English letters and dashes only.', false);
+                return;
+            }
+            postSlug(input.value.trim()).then(function(data) {
+                if (!data.success) {
+                    showStatus(data.data || 'Could not save.', false);
+                    return;
+                }
+                saved = data.data.slug || '';
+                if (saved) {
+                    showLocked();
+                    showStatus('Saved.', true);
+                } else {
+                    showEmpty();
+                    showStatus('Removed.', true);
+                }
+            }).catch(function() {
+                showStatus('Network error', false);
+            });
+        });
+
+        removeBtn.addEventListener('click', function() {
+            if (!window.confirm('Remove this script from the site?')) return;
+            postSlug('').then(function(data) {
+                if (!data.success) {
+                    showStatus(data.data || 'Could not remove.', false);
+                    return;
+                }
+                showEmpty();
+                showStatus('Removed.', true);
+            }).catch(function() {
+                showStatus('Network error', false);
+            });
+        });
+    })();
+    </script>
+    <?php
+}
 
 function talktopc_render_dashboard_page() {
     $is_connected = !empty(get_option('talktopc_api_key'));
@@ -80,6 +231,8 @@ function talktopc_render_dashboard_page() {
                     <a href="<?php echo esc_url($disconnect_url); ?>" class="button-link-delete" style="margin-left: auto;">Disconnect</a>
                 </div>
             </div>
+            
+            <?php talktopc_render_embed_card(); ?>
             
             <!-- Default Agent -->
             <div class="card">
@@ -429,6 +582,7 @@ function talktopc_render_dashboard_page() {
                 <p>Connect your TalkToPC account to get started.</p>
                 <a href="<?php echo esc_url($connect_url); ?>" class="button button-primary button-hero"><?php echo esc_html__('Connect to TalkToPC', 'talktopc'); ?></a>
             </div>
+            <?php talktopc_render_embed_card(); ?>
         <?php endif; ?>
     </div>
     <?php

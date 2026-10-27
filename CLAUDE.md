@@ -4,7 +4,7 @@
 
 AI-powered voice assistant plugin for WordPress. Visitors have natural voice conversations with AI agents in 40+ languages. Features one-click OAuth setup, automatic AI agent creation from site content, WooCommerce support, and full widget customization. ~6,700 lines of core PHP.
 
-**Version:** 1.9.113
+**Version:** 1.9.114
 
 ## Tech Stack
 
@@ -71,8 +71,13 @@ whether the file is current.
 
 - `deploy_to_svn.sh` - Deploy to WordPress.org SVN (trunk & tags)
 - `production_deploy.sh` - Auto-bump patch version, create zip, save to ~/Downloads
-- `upload_all.sh` - Rsync plugin to remote server
+- `upload_all.sh` - Rsync plugin to the server, then `docker cp` into the container (use when the plugin directory is not mounted)
+- `dev_sync.sh` - Live dev sync. The Loopitis compose file bind-mounts `/home/ubuntu/loopitis/plugins/talktopc` into `loopitis-wordpress-1` at `wp-content/plugins/talktopc`, and keeps the existing WordPress files volume. `./dev_sync.sh` rsyncs this repo to that directory over `ssh loopitis` and watches for saves. View the site at https://loopitis.com. Do not `docker compose down -v` (that deletes `loop_wp_data`).
 - `clear_cache.sh` - Cache management
+
+## Partner embed
+
+Dashboard card **Partner script** (`talktopc_embed_slug`), shown with or without an API key. The admin enters English letters and dashes only, for a registered partner script. After save the name is locked until Edit, and Remove clears it. Saving goes through `talktopc_save_embed_slug` and updates only that option. On the public site, `talktopc_print_partner_embed()` prints one inline script in `wp_head` that skips iframes and loads `https://cdn.talktopc.com/<word>.js`. An empty value prints nothing.
 
 ## Install & Setup
 

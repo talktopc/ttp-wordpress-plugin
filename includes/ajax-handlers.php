@@ -1569,3 +1569,26 @@ add_action('wp_ajax_talktopc_save_ecommerce', function() {
 
     wp_send_json_success(['ecommerce_enabled' => $enabled, 'shopify_domain' => $domain]);
 });
+
+// =============================================================================
+// SAVE PARTNER EMBED SLUG
+// One option only, so the rest of the plugin settings stay as they are.
+// =============================================================================
+add_action('wp_ajax_talktopc_save_embed_slug', function() {
+    check_ajax_referer('talktopc_save_embed_slug', '_wpnonce');
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Unauthorized');
+    }
+
+    $raw = isset($_POST['embed_slug']) ? wp_unslash($_POST['embed_slug']) : '';
+    $slug = talktopc_normalize_embed_slug($raw);
+    if ($slug === false) {
+        wp_send_json_error('English letters and dashes only.');
+    }
+
+    update_option('talktopc_embed_slug', $slug);
+    wp_send_json_success([
+        'slug' => $slug,
+        'src' => talktopc_embed_script_url($slug),
+    ]);
+});
