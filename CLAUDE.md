@@ -69,8 +69,10 @@ whether the file is current.
 
 ## Deployment Scripts
 
-- `deploy_to_svn.sh` - Deploy to WordPress.org SVN (trunk & tags)
-- `production_deploy.sh` - Auto-bump patch version, create zip, save to ~/Downloads
+Publishing to the WordPress.org plugin directory is `PUBLISH.md`. One command, from a terminal on the laptop: `./deploy_to_svn.sh`. Subversion is not installed here. The script copies the tree into `/home/yinon11/talktopc-wp-plugin-dev/talk-to-pc`, tags the version read from `talktopc.php`, and commits through a temporary `alpine:3.20` container (`docker run --rm -it`, Subversion installed inside, `~/.subversion` mounted). The password prompt is why it has to be a real terminal. GitHub `main` is not the marketplace.
+
+- `deploy_to_svn.sh` - Publish trunk and `tags/<version>` to WordPress.org
+- `production_deploy.sh` - Auto-bump patch version, create zip, save to ~/Downloads. Does not upload.
 - `upload_all.sh` - Rsync plugin to the server, then `docker cp` into the container (use when the plugin directory is not mounted)
 - `dev_sync.sh` - Live dev sync. The Loopitis compose file bind-mounts `/home/ubuntu/loopitis/plugins/talktopc` into `loopitis-wordpress-1` at `wp-content/plugins/talktopc`, and keeps the existing WordPress files volume. `./dev_sync.sh` rsyncs this repo to that directory over `ssh loopitis` and watches for saves. View the site at https://loopitis.com. Do not `docker compose down -v` (that deletes `loop_wp_data`).
 - `clear_cache.sh` - Cache management
