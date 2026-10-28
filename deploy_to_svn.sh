@@ -107,7 +107,7 @@ cd "$SVN_TRUNK_DIR"
 if svn status | grep -q "^[AMD]"; then
     echo "   Committing trunk changes..."
     svn add --force . 2>/dev/null || true
-    svn ci -m "Update to $VERSION: partner script for registered partners"
+    svn ci -m "Update to $VERSION: keep the widget loading when WP Rocket delays JavaScript"
     echo "✅ Trunk committed"
 else
     echo "   No changes in trunk to commit"

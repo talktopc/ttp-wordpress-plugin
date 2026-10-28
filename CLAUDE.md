@@ -4,7 +4,7 @@
 
 AI-powered voice assistant plugin for WordPress. Visitors have natural voice conversations with AI agents in 40+ languages. Features one-click OAuth setup, automatic AI agent creation from site content, WooCommerce support, and full widget customization. ~6,700 lines of core PHP.
 
-**Version:** 1.9.114
+**Version:** 1.9.115
 
 ## Tech Stack
 
@@ -77,7 +77,7 @@ whether the file is current.
 
 ## Partner embed
 
-Dashboard card **Partner script** (`talktopc_embed_slug`), shown with or without an API key. The admin enters English letters and dashes only, for a registered partner script. After save the name is locked until Edit, and Remove clears it. Saving goes through `talktopc_save_embed_slug` and updates only that option. On the public site, `talktopc_print_partner_embed()` prints one inline script in `wp_head` that skips iframes and loads `https://cdn.talktopc.com/<word>.js`. An empty value prints nothing.
+Dashboard card **Partner script** (`talktopc_embed_slug`), shown with or without an API key. The admin enters English letters and dashes only, for a registered partner script. After save the name is locked until Edit, and Remove clears it. Saving goes through `talktopc_save_embed_slug` and updates only that option. On the public site, `talktopc_print_partner_embed()` prints one inline script in `wp_head` that skips iframes and loads `https://cdn.talktopc.com/<word>.js`. An empty value prints nothing. That tag, and the normal `talktopc-agent-widget` tag plus its inline init, carry `nowprocket` so WP Rocket Delay JavaScript does not hold them. Browsers ignore the attribute.
 
 ## Install & Setup
 

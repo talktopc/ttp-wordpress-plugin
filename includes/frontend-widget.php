@@ -26,7 +26,8 @@ function talktopc_print_partner_embed() {
     if ($src === '') {
         return;
     }
-    echo "<script>\n";
+    // nowprocket is WP Rocket's mark to leave this tag alone. Browsers ignore it.
+    echo "<script nowprocket>\n";
     echo "(function () {\n";
     echo "  if (window.top !== window.self) return;\n";
     echo "  var s = document.createElement('script');\n";
@@ -35,6 +36,15 @@ function talktopc_print_partner_embed() {
     echo "  document.head.appendChild(s);\n";
     echo "})();\n";
     echo "</script>\n";
+}
+
+add_filter('script_loader_tag', 'talktopc_script_nowprocket', 10, 2);
+
+function talktopc_script_nowprocket($tag, $handle) {
+    if ($handle !== 'talktopc-agent-widget') {
+        return $tag;
+    }
+    return preg_replace('/<script\b(?![^>]*\bnowprocket\b)/', '<script nowprocket', $tag);
 }
 
 add_action('wp_enqueue_scripts', function() {

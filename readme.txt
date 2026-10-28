@@ -3,7 +3,7 @@ Contributors: yinon11
 Tags: talktopc, voice, ai agent, voice assistant, chatbot
 Requires at least: 5.0
 Tested up to: 6.9
-Stable tag: 1.9.114
+Stable tag: 1.9.115
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -87,6 +87,9 @@ The WordPress plugin is free to install. TalkToPC offers a free trial and variou
 Absolutely! The plugin automatically includes your product catalog, prices, and descriptions in the AI's memory.
 
 == Changelog ==
+
+= 1.9.115 =
+* Added: nowprocket on the widget script tags, so WP Rocket Delay JavaScript does not hold the loader.
 
 = 1.9.114 =
 * Added: Partner script on the dashboard for a registered partner. English letters and dashes only. The site loads https://cdn.talktopc.com/<name>.js outside iframes, even with no TalkToPC account connected.
