@@ -12,6 +12,7 @@ if (!defined('ABSPATH')) exit;
 function talktopc_render_embed_card() {
     $slug = (string) get_option('talktopc_embed_slug', '');
     $src = talktopc_embed_script_url($slug);
+    $hide_paths = (string) get_option('talktopc_embed_hide_paths', '');
     ?>
     <div class="card">
         <h2><span class="icon">📄</span> Partner script</h2>
@@ -32,6 +33,19 @@ function talktopc_render_embed_card() {
             <button type="button" class="button button-link-delete" id="talktopc_remove_embed" <?php echo $src === '' ? 'style="display:none;"' : ''; ?>>Remove script</button>
             <span id="talktopc_embed_save_status" style="margin-left: 10px;"></span>
         </div>
+        <table class="form-table" style="margin-top: 18px;">
+            <tr>
+                <th scope="row"><label for="talktopc_embed_hide_paths">Hide on these paths</label></th>
+                <td>
+                    <textarea id="talktopc_embed_hide_paths" class="large-text code" rows="6" dir="ltr" spellcheck="false"><?php echo esc_textarea($hide_paths); ?></textarea>
+                    <p class="description">One path per line, as it appears in the address bar. <code>/checkout</code> also hides <code>/checkout/order-received</code>. The home page cannot be hidden. Saving clears the WP Rocket cache.</p>
+                </td>
+            </tr>
+        </table>
+        <div style="margin-top: 10px;">
+            <button type="button" class="button button-primary" id="talktopc_save_hide_paths">Save hidden paths</button>
+            <span id="talktopc_hide_paths_status" style="margin-left: 10px;"></span>
+        </div>
     </div>
     <script>
     (function() {
@@ -42,6 +56,41 @@ function talktopc_render_embed_card() {
         var cancelBtn = document.getElementById('talktopc_cancel_embed');
         var removeBtn = document.getElementById('talktopc_remove_embed');
         var status = document.getElementById('talktopc_embed_save_status');
+
+        var hideInput = document.getElementById('talktopc_embed_hide_paths');
+        var hideSave = document.getElementById('talktopc_save_hide_paths');
+        var hideStatus = document.getElementById('talktopc_hide_paths_status');
+        if (hideInput && hideSave && hideStatus) {
+            hideSave.addEventListener('click', function() {
+                hideStatus.textContent = 'Saving...';
+                hideStatus.style.color = '#646970';
+                var formData = new FormData();
+                formData.append('action', 'talktopc_save_embed_hide_paths');
+                formData.append('hide_paths', hideInput.value);
+                formData.append('_wpnonce', '<?php echo esc_js(wp_create_nonce('talktopc_save_embed_hide_paths')); ?>');
+                fetch(ajaxurl, { method: 'POST', body: formData }).then(function(r) { return r.json(); }).then(function(data) {
+                    if (!data.success) {
+                        hideStatus.textContent = (data.data && typeof data.data === 'string') ? data.data : 'Could not save.';
+                        hideStatus.style.color = '#d63638';
+                        return;
+                    }
+                    hideInput.value = data.data.paths || '';
+                    var msg = 'Saved.';
+                    if (data.data.dropped > 0) {
+                        msg += ' ' + data.data.dropped + (data.data.dropped === 1 ? ' line was left out.' : ' lines were left out.');
+                    }
+                    if (data.data.cache_cleared) {
+                        msg += ' Site cache cleared.';
+                    }
+                    hideStatus.textContent = msg;
+                    hideStatus.style.color = '#00a32a';
+                }).catch(function() {
+                    hideStatus.textContent = 'Network error';
+                    hideStatus.style.color = '#d63638';
+                });
+            });
+        }
+
         if (!input || !preview || !saveBtn || !editBtn || !cancelBtn || !removeBtn) return;
 
         var saved = input.value;

@@ -4,7 +4,7 @@
 
 AI-powered voice assistant plugin for WordPress. Visitors have natural voice conversations with AI agents in 40+ languages. Features one-click OAuth setup, automatic AI agent creation from site content, WooCommerce support, and full widget customization. ~6,700 lines of core PHP.
 
-**Version:** 1.9.115
+**Version:** 1.9.116
 
 ## Tech Stack
 
@@ -74,12 +74,14 @@ Publishing to the WordPress.org plugin directory is `PUBLISH.md`. One command, f
 - `deploy_to_svn.sh` - Publish trunk and `tags/<version>` to WordPress.org
 - `production_deploy.sh` - Auto-bump patch version, create zip, save to ~/Downloads. Does not upload.
 - `upload_all.sh` - Rsync plugin to the server, then `docker cp` into the container (use when the plugin directory is not mounted)
-- `dev_sync.sh` - Live dev sync. The Loopitis compose file bind-mounts `/home/ubuntu/loopitis/plugins/talktopc` into `loopitis-wordpress-1` at `wp-content/plugins/talktopc`, and keeps the existing WordPress files volume. `./dev_sync.sh` rsyncs this repo to that directory over `ssh loopitis` and watches for saves. View the site at https://loopitis.com. Do not `docker compose down -v` (that deletes `loop_wp_data`).
+- `dev_sync.sh` - Live dev sync. `./dev_sync.sh` rsyncs this repo to `/home/ubuntu/loopitis/plugins/talktopc` over `ssh loopitis`, then `docker cp` into `loopitis-wordpress-1:/var/www/html/wp-content/plugins/talktopc`. The container's `/var/www/html` is a Docker volume; that host folder is not mounted into it, so a host-only copy leaves the site on the old plugin. View the admin at https://loopitis.com/wp-admin. Do not `docker compose down -v` (that deletes the WordPress volume).
 - `clear_cache.sh` - Cache management
 
 ## Partner embed
 
 Dashboard card **Partner script** (`talktopc_embed_slug`), shown with or without an API key. The admin enters English letters and dashes only, for a registered partner script. After save the name is locked until Edit, and Remove clears it. Saving goes through `talktopc_save_embed_slug` and updates only that option. On the public site, `talktopc_print_partner_embed()` prints one inline script in `wp_head` that skips iframes and loads `https://cdn.talktopc.com/<word>.js`. An empty value prints nothing. That tag, and the normal `talktopc-agent-widget` tag plus its inline init, carry `nowprocket` so WP Rocket Delay JavaScript does not hold them. Browsers ignore the attribute.
+
+**Hide on these paths** (`talktopc_embed_hide_paths`, `includes/embed-hide-paths.php`) is the same card: one path per line. `talktopc_print_partner_embed()` returns before printing when the request path equals a saved path or sits under it (`/checkout` hides `/checkout/order-received`, and does not hide `/checkout-extra`). The home page `/` is dropped on save, so a blank or `/` line cannot take the assistant off the site. Query strings are ignored. Hebrew paths are decoded on both sides; `sanitize_text_field` is not used on `REQUEST_URI` because it deletes `%xx` octets. Page Rules do not apply here — Rimon's bot is this loader, and "No Widget" on a page rule only stops the generic `agent-widget.js` enqueue. A changed list calls `rocket_clean_domain()` when WP Rocket is present, because the loader is baked into cached HTML. A live call that framed its way onto an excluded URL keeps the widget already on the page. Tests: `php tests/embed-hide-paths-test.php`.
 
 ## Install & Setup
 

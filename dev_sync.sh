@@ -1,7 +1,9 @@
 #!/bin/bash
-# Keep the Loopitis WordPress plugin bind mount in sync with this repo.
-# The container reads /home/ubuntu/loopitis/plugins/talktopc directly, so a
-# save shows up on https://loopitis.com without docker cp.
+# Keep the Loopitis WordPress plugin in sync with this repo.
+# Files land in /home/ubuntu/loopitis/plugins/talktopc, then are copied into
+# loopitis-wordpress-1. That container's /var/www/html is a Docker volume, not
+# a bind mount of the host plugin folder, so a host-only rsync never changes
+# what https://loopitis.com runs.
 # Usage: ./dev_sync.sh          # sync once, then watch
 #        ./dev_sync.sh --once   # sync once and exit
 
@@ -32,6 +34,9 @@ sync_once() {
     -e "ssh -o BatchMode=yes" \
     "$PLUGIN_DIR/" "$REMOTE"
   ssh -o BatchMode=yes loopitis 'sudo -n find /home/ubuntu/loopitis/plugins/talktopc -type f -exec chmod 644 {} +'
+  # Copy the directory contents into the plugin WordPress loads. The trailing
+  # /. is required: without it docker cp nests a second talktopc folder.
+  ssh -o BatchMode=yes loopitis 'docker cp /home/ubuntu/loopitis/plugins/talktopc/. loopitis-wordpress-1:/var/www/html/wp-content/plugins/talktopc/ && docker exec loopitis-wordpress-1 chown -R www-data:www-data /var/www/html/wp-content/plugins/talktopc'
 }
 
 sync_once

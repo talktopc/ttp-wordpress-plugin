@@ -79,6 +79,7 @@ rsync -a --delete \
     --exclude='.vscode/' \
     --exclude='.DS_Store' \
     --exclude='node_modules/' \
+    --exclude='tests/' \
     --exclude='.attach_pid*' \
     --exclude='*.log' \
     --exclude='*.swp' \

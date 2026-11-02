@@ -3,7 +3,7 @@
  * Plugin Name: TalkToPC Voice Widget
  * Plugin URI: https://wordpress.org/plugins/talktopc/
  * Description: Add AI voice conversations to your WordPress site.
- * Version: 1.9.115
+ * Version: 1.9.116
  * Author: TTP GO LTD
  * Author URI: https://talktopc.com
  * License: GPL-2.0-or-later
@@ -37,7 +37,7 @@ if (!defined('ABSPATH')) exit;
 // =============================================================================
 define('TALKTOPC_API_URL', 'https://backend.talktopc.com');
 define('TALKTOPC_CONNECT_URL', 'https://talktopc.com/connect/wordpress');
-define('TALKTOPC_VERSION', '1.9.115');
+define('TALKTOPC_VERSION', '1.9.116');
 define('TALKTOPC_PLUGIN_DIR', plugin_dir_path(__FILE__));
 
 /**
@@ -50,6 +50,7 @@ function talktopc_plugin_default_icon_url() {
 // =============================================================================
 // INCLUDES
 // =============================================================================
+require_once TALKTOPC_PLUGIN_DIR . 'includes/embed-hide-paths.php';
 require_once TALKTOPC_PLUGIN_DIR . 'includes/admin-settings.php';
 require_once TALKTOPC_PLUGIN_DIR . 'includes/admin-page.php';
 require_once TALKTOPC_PLUGIN_DIR . 'includes/oauth.php';
@@ -147,7 +148,7 @@ function talktopc_get_all_option_names() {
         // =========================
         // CONNECTION
         // =========================
-        'talktopc_api_key', 'talktopc_app_id', 'talktopc_user_email', 'talktopc_embed_slug', 'talktopc_feature_banner_dismissed',
+        'talktopc_api_key', 'talktopc_app_id', 'talktopc_user_email', 'talktopc_embed_slug', 'talktopc_embed_hide_paths', 'talktopc_feature_banner_dismissed',
         'talktopc_connected_time', 'talktopc_review_dismissed', 'talktopc_review_done',
         
         // =========================

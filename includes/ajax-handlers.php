@@ -1592,3 +1592,33 @@ add_action('wp_ajax_talktopc_save_embed_slug', function() {
         'src' => talktopc_embed_script_url($slug),
     ]);
 });
+
+// =============================================================================
+// SAVE PARTNER EMBED HIDE PATHS
+// One option. A changed list clears the WP Rocket cache, because Rocket stores
+// the head that either contains the loader or does not.
+// =============================================================================
+add_action('wp_ajax_talktopc_save_embed_hide_paths', function() {
+    check_ajax_referer('talktopc_save_embed_hide_paths', '_wpnonce');
+    if (!current_user_can('manage_options')) {
+        wp_send_json_error('Unauthorized');
+    }
+
+    $raw = isset($_POST['hide_paths']) ? wp_unslash($_POST['hide_paths']) : '';
+    $parsed = talktopc_normalize_hide_paths(wp_strip_all_tags((string) $raw));
+    $stored = implode("\n", $parsed['paths']);
+    $previous = (string) get_option('talktopc_embed_hide_paths', '');
+    update_option('talktopc_embed_hide_paths', $stored);
+
+    $cache_cleared = false;
+    if ($stored !== $previous) {
+        $cache_cleared = talktopc_clear_rocket_cache();
+    }
+
+    wp_send_json_success([
+        'paths' => $stored,
+        'count' => count($parsed['paths']),
+        'dropped' => $parsed['dropped'],
+        'cache_cleared' => $cache_cleared,
+    ]);
+});

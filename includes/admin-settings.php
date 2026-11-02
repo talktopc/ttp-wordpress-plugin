@@ -48,6 +48,10 @@ add_action('admin_init', function() {
         'sanitize_callback' => 'talktopc_sanitize_embed_slug',
         'default' => ''
     ]);
+    register_setting('talktopc_embed', 'talktopc_embed_hide_paths', [
+        'sanitize_callback' => 'talktopc_sanitize_embed_hide_paths',
+        'default' => ''
+    ]);
     
     // =========================================================================
     // AGENT SELECTION

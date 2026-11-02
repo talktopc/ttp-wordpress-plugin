@@ -26,6 +26,18 @@ function talktopc_print_partner_embed() {
     if ($src === '') {
         return;
     }
+    // sanitize_text_field deletes %xx octets, which would erase a Hebrew path and
+    // show the bot on a page the list was meant to hide. The matcher decodes the
+    // path and drops control characters.
+    // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+    $uri = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '/';
+    if (!is_string($uri)) {
+        $uri = '/';
+    }
+    $uri = wp_strip_all_tags($uri);
+    if (talktopc_path_is_hidden(talktopc_path_from_request_uri($uri), talktopc_embed_hide_paths())) {
+        return;
+    }
     // nowprocket is WP Rocket's mark to leave this tag alone. Browsers ignore it.
     echo "<script nowprocket>\n";
     echo "(function () {\n";
