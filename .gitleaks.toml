@@ -1,0 +1,34 @@
+# TalkToPC shared gitleaks config (TBD 47).
+# The same file sits at the root of every repo; the master copy is in
+# infra-talktopc. Change it there first, then copy it to the other repos.
+# It keeps all the default gitleaks rules and only skips the known noise from
+# the full-history scan of 2026-11-17
+# (compliance/eshet/evidence/2026-11-17-gitleaks-history-scan.md).
+# Never add a real secret here to make a commit pass: rotate it instead.
+
+title = "TalkToPC gitleaks config"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Files that hold public or generated values, not secrets"
+paths = [
+  # Firebase client config: public by design
+  '''(^|/)mobile/google-services\.json$''',
+  # Sobeys partner adapter seeds: public storefront keys inside page scripts
+  '''(^|/)src/main/resources/db/partner_adapters_sobeys_[a-z0-9_]+\.sql$''',
+  # ops policy test: made-up tokens used as test input
+  '''(^|/)ops/tests/test_policy\.py$''',
+  # Built or generated files
+  '''(^|/)public/ttp-agent-sdk/''',
+  '''(^|/)graphify-out/''',
+  '''(^|/)package-lock\.json$''',
+]
+
+[[allowlists]]
+description = "Stripe publishable keys are public by design (secret keys start with sk_ and still fire)"
+regexTarget = "match"
+regexes = [
+  '''pk_(live|test)_[0-9A-Za-z]{10,}''',
+]
